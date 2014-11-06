@@ -2,6 +2,8 @@
 	var app = angular.module('dashboardApp', []);
 	
 	app.controller('DashboardController', ['$scope', '$http', '$q', function($scope, $http, $q) {
+		$scope.authorised = false;
+
 		$scope.organisations = [];
 		$scope.boards = [];
 
@@ -11,7 +13,8 @@
 		$scope.init = function() {
 			console.log('Starting init()..');
 			$scope.authorise();
-			$scope.loadOrganisations();
+				$scope.authorised = Trello.authorized();
+				$scope.loadOrganisations();
 			console.log('Closing init()..');
 		};
 
@@ -59,6 +62,22 @@
 		$scope.changeOrganisation = function() {
 			$scope.loadBoards();
 		};
+
+		$scope.login = function() {
+			var deferred = $q.defer();
+			Trello.authorize({
+				type: "redirect"
+			});
+			deferred.promise.then(function(result) { $scope.authorise(); console.log(result);});
+			return deferred.promise;
+		};
+
+		$scope.logout = function() {
+			Trello.deauthorize();
+			$scope.authorised = false;
+			$scope.organisations = [];
+			$scope.boards = [];
+		}
 
 		$scope.init();
 	}]);
