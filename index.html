@@ -55,7 +55,7 @@
 				</div>
 				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 					<form class="navbar-form navbar-left">
-						<div class="input-group">
+						<div class="input-group" ng-show="authorised == true">
 							<span class="input-group-addon">Organisation</span>
 							<select class="form-control" ng-model="selectedOrganisation" ng-options="organisation.displayName for organisation in organisations track by organisation.id" ng-change="changeOrganisation()">
 							
@@ -71,12 +71,43 @@
 						</div>
 					</form>
 					<ul class="nav navbar-nav navbar-right">
-						<li><a href="#">Login</a></li>
-						<li><a href="#">Logout</a></li>
+						<li><a href="#" ng-show="authorised == false" ng-click="login()">Login</a></li>
+						<li><a href="#" ng-show="authorised == true" ng-click="logout()">Logout</a></li>
 					</ul>
 				</div>
 			</div>
 		</nav>
+		<div class="container" ng-show="authorised != true;">
+			<div class="jumbotron">
+				<h1>Trello Dashboard</h1>
+				<p>
+					Welcome to the Trello Dashboard. This application will display
+					a summary of your
+					existing Trello organisations, boards, lists, and cards.
+				</p>
+				<p>
+					This version allows you to:
+					<ul>
+						<li>Login using your Trello account</li>
+						<li>Select an Organisation to view</li>
+						<li>Choose whether to display Open, Closed, or All boards</li>
+						<li>Display each of the Lists in your Boards</li>
+					</ul>
+				</p>
+				<p>
+					Planned Features:
+					<ul>
+						<li>Display a count of cards per list</li>
+						<li>Provide a graphical representation of cards per list</li>
+					</ul>
+				</p>
+				<p>
+					Please note: this is a work in progress! Any and all feedback is
+					welcome.
+				</p>
+				<p><button type="button" class="btn btn-primary btn-lg" ng-click="login()">Login</button></p>
+			</div>
+		</div>
 		<div class="container">
 			<div class="row">
 				<div class="panel panel-masonry" ng-repeat="board in boards" ng-class="board.closed ? 'panel-danger' : 'panel-success'" ng-show="filter == 'all' || (!board.closed && filter == 'open') || (board.closed && filter == 'closed')">
