@@ -1,0 +1,40 @@
+(function(){
+	var app = angular.module('dashboardApp', []);
+	
+	app.controller('DashboardController', ['$scope', '$http', function($scope, $http) {
+		addEventListener('load', load, false);
+
+		$scope.organisations = [];
+
+		function load() {
+			console.log('Loaded...');
+
+			Trello.authorize({
+				interactive: false,
+				success: onAuthorise
+			});
+		}
+
+		function onAuthorise() {
+			initialise();
+		}
+
+		function initialise() {
+			Trello.get("members/me/organizations", {fields: "name, displayName, desc, descData"},  function(organisations) {
+				$.each(organisations, function(i, organisation) {
+					console.log('Organisation: ' + organisation.id);
+
+					organisation.boards = [];
+					Trello.get("organizations/" + organisation.id + "/boards?lists=all", function(boards) {
+						$.each(boards, function(j, board) {
+							organisation.boards.push(board);
+						});
+					});
+
+					$scope.organisations.push(organisation);
+				});
+				console.log($scope.organisations);
+			});
+		}
+	}]);
+})();

@@ -1,0 +1,131 @@
+<html>
+  <head>
+  <!-- ...  -->
+
+  <!-- The client library requires jQuery  -->
+  <script src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
+  <script src="https://api.trello.com/1/client.js?key=d393ef8fea5f6d5d75562a9a5c25bb5e"></script>
+
+  <!-- ...  -->
+  </head>
+
+<style>
+body {
+    font-family: arial;
+    font-size: 12px;
+}
+
+#loggedout {
+    text-align: center;
+    font-size: 20px;
+    padding-top: 30px;
+}
+#loggedin { 
+    display: none; 
+}
+
+#header {
+    padding: 4px;
+    border-bottom: 1px solid #000;
+    background: #eee;
+}
+
+#output {
+    padding: 4px;
+}
+
+.card { 
+    display: block; 
+    padding: 2px;
+}
+
+
+
+</style>
+<script type="text/javascript">
+$(document).ready(function(){
+var onAuthorize = function() {
+    updateLoggedIn();
+    $("#output").empty();
+    
+    Trello.members.get("me", function(member){
+        $("#fullName").text(member.fullName);
+    
+        var $cards = $("<div>")
+            .text("Loading Cards...")
+            .appendTo("#output");
+
+	var $boards= $("<div>");
+
+        // Output a list of all of the cards that the member 
+        // is assigned to
+        Trello.get("members/me/cards", function(cards) {
+            $cards.empty();
+            $.each(cards, function(ix, card) {
+                $("<a>")
+                .attr({href: card.url, target: "trello"})
+                .addClass("card")
+                .text(card.name)
+                .appendTo($cards);
+            });  
+        });
+
+        Trello.get("organizations/ucapps/boards?filter=open", function(boards){
+            $boards.empty();
+            $.each(boards, function(ix, board) {
+                console.log(ix + ' ' + board.name + ' ' + board.url);
+            });
+        });
+
+        Trello.get("members/me/organizations", function(boards) {
+            $.each(boards, function(ix, board) {
+                console.log(ix + ' ' + board.name + ' ' + board.url);
+            });
+        });
+    });
+
+};
+
+var updateLoggedIn = function() {
+    var isLoggedIn = Trello.authorized();
+    $("#loggedout").toggle(!isLoggedIn);
+    $("#loggedin").toggle(isLoggedIn);        
+};
+    
+var logout = function() {
+    Trello.deauthorize();
+    updateLoggedIn();
+};
+                          
+Trello.authorize({
+    interactive:false,
+    success: onAuthorize
+});
+
+$("#connectLink")
+.click(function(){
+    Trello.authorize({
+        type: "popup",
+        success: onAuthorize
+    })
+});
+    
+$("#disconnect").click(logout);
+
+});
+</script>
+  <body>
+<div id="loggedout">
+    <a id="connectLink" href="#">Connect To Trello</a>
+</div>
+
+<div id="loggedin">
+    <div id="header">
+        Logged in to as <span id="fullName"></span> 
+        <a id="disconnect" href="#">Log Out</a>
+    </div>
+    
+    <div id="output"></div>
+</div>   
+  </body>
+</html>

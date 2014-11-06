@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html ng-app="dashboardApp">
+	<head>
+		<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+		<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+
+		<!-- Optional theme -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
+
+		<!-- Latest compiled and minified JavaScript -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+
+		<!-- Angular JS -->
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.1/angular.min.js"></script>
+
+		<!-- Trello Client -->
+		<script src="https://api.trello.com/1/client.js?key=d393ef8fea5f6d5d75562a9a5c25bb5e"></script>
+
+		<!-- Dashboard Controller -->
+		<script src="js/dashboardApp.js"></script>
+
+		<style>
+			// http://www.bootply.com/123350
+			*, *:before, *:after {box-sizing:  border-box !important;}
+
+			.row {
+				 -moz-column-width: 25em;
+				 -webkit-column-width: 25em;
+				 -moz-column-gap: .5em;
+				 -webkit-column-gap: .5em; 
+			}
+
+			.panel-masonry {
+				 display: inline-block;
+				 margin:  .5em;
+				 padding:  0; 
+				 width:98%;
+			}
+		</style>
+	</head>
+	<body ng-controller="DashboardController">
+		<nav class="navbar navbar-inverse" role="navigation">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="#">Trello Dashboard</a>
+				</div>
+				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+					<form class="navbar-form navbar-left">
+						<div class="input-group">
+							<span class="input-group-addon">Organisation</span>
+							<select class="form-control" ng-model="selectedOrganisation" ng-options="organisation.displayName for organisation in organisations track by organisation.id" ng-change="changeOrganisation()">
+							
+							</select>
+						</div>
+						<div class="input-group" ng-show="selectedOrganisation!=null">
+							<span class="input-group-addon">Filter</span>
+							<select class="form-control" ng-model="filter">
+								<option value="open">Open</option>
+								<option value="closed">Closed</option>
+								<option value="all">All</option>
+							</select>
+						</div>
+					</form>
+					<ul class="nav navbar-nav navbar-right">
+						<li><a href="#">Login</a></li>
+						<li><a href="#">Logout</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		<div class="container">
+			<div class="row">
+				<div class="panel panel-masonry" ng-repeat="board in boards" ng-class="board.closed ? 'panel-danger' : 'panel-success'" ng-show="filter == 'all' || (!board.closed && filter == 'open') || (board.closed && filter == 'closed')">
+					<div class="panel-heading">
+						{{board.name}}
+					</div>
+					<!--<div class="panel-body">Foo</div>-->
+					<ul class="list-group">
+						<li class="list-group-item" ng-repeat="list in board.lists">
+							<span class="badge">12</span>
+							{{list.name}}
+						</li>	
+					</ul>	
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
