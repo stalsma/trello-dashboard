@@ -77,6 +77,7 @@
 			$scope.authorised = false;
 			$scope.organisations = [];
 			$scope.boards = [];
+			$scope.selectedOrganisation = null;
 		}
 
 		$scope.init();
