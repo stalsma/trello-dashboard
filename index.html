@@ -108,12 +108,17 @@
 			<div class="row">
 				<div class="panel panel-masonry" ng-repeat="board in boards" ng-class="board.closed ? 'panel-danger' : 'panel-success'" ng-show="filter == 'all' || (!board.closed && filter == 'open') || (board.closed && filter == 'closed')">
 					<div class="panel-heading">
-						{{board.name}}
+						<strong>{{board.name}}</strong>
+						<span class="pull-right">
+							<a href="{{board.url}}" target="_blank">
+								<span class="glyphicon glyphicon-link"></span>
+							</a>
+						</span>
 					</div>
 					<!--<div class="panel-body">Foo</div>-->
 					<ul class="list-group">
 						<li class="list-group-item" ng-repeat="list in board.lists">
-							<span class="badge">12</span>
+							<span class="badge">{{list.cards.length}}</span>
 							{{list.name}}
 						</li>	
 					</ul>	

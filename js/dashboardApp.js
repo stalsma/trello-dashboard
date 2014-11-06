@@ -11,11 +11,9 @@
 		$scope.filter = 'open';
 
 		$scope.init = function() {
-			console.log('Starting init()..');
 			$scope.authorise();
 				$scope.authorised = Trello.authorized();
 				$scope.loadOrganisations();
-			console.log('Closing init()..');
 		};
 
 		$scope.authorise = function() {
@@ -28,18 +26,15 @@
 		};
 
 		$scope.loadOrganisations = function() {
-			console.log('Starting getOrganisations()..');
 			var deferred = $q.defer();
 			Trello.get("members/me/organizations", {fields: "name,displayName,url,closed"}, function(organisations) {
 				deferred.resolve(organisations);
 			});
 			deferred.promise.then(function(value) { 
-				console.log(value);
 				$.each(value, function(i, organisation) {
 					$scope.organisations.push(organisation);
 				});
 			});
-			console.log('Closing getOrganisations()..');
 		}
 
 		$scope.loadBoards = function() {
@@ -52,11 +47,26 @@
 			});
 			deferred.promise.then(function(boards) {
 				$.each(boards, function(i, board) {
-					console.log(board);
 					$scope.boards.push(board);
 				});
+				$scope.loadLists();
 			});
 	
+		};
+
+		$scope.loadLists = function() {
+			$.each($scope.boards, function(i, board) {
+				$.each(board.lists, function(j, list) {
+					list.cards = [];
+					var deferred = $q.defer();
+					Trello.get("lists/" + list.id + "/cards", {}, function(cards) {
+						deferred.resolve(cards);
+					});
+					deferred.promise.then(function(cards) {
+						list.cards = cards;
+					});
+				});
+			});
 		};
 
 		$scope.changeOrganisation = function() {
@@ -68,8 +78,6 @@
 			Trello.authorize({
 				type: "redirect"
 			});
-			deferred.promise.then(function(result) { $scope.authorise(); console.log(result);});
-			return deferred.promise;
 		};
 
 		$scope.logout = function() {
