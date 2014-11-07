@@ -38,6 +38,16 @@
 
 		$scope.loadOrganisations = function() {
 			var deferred = $q.defer();
+		
+			// Add a 'dummy' organisation for "My Boards"	
+			$scope.organisations.push({id:"my",name:"My Boards",displayName:"My Boards",url:"",closed:false});
+			$scope.selectedOrganisation = $scope.organisations[0];
+			$scope.loadBoards();
+
+			// Add a 'dummy' organisation for "Starred" boards
+			$scope.organisations.push({id:"starred",name:"Starred Boards",displayName:"Starred Boards",url:"",closed:false});
+
+			// Get a list of my organisations
 			Trello.get("members/me/organizations", {fields: "name,displayName,url,closed"}, function(organisations) {
 				deferred.resolve(organisations);
 			});
@@ -52,17 +62,43 @@
 			$scope.boards = [];
 			var deferred = $q.defer();
 
+			var selected = $scope.selectedOrganisation.id;
+
 			// Get boards for the selected organisation
-			Trello.get("organizations/"+$scope.selectedOrganisation.id+"/boards", {lists:"all"}, function(boards) {
-				deferred.resolve(boards);
-			});
-			deferred.promise.then(function(boards) {
-				$.each(boards, function(i, board) {
-					$scope.boards.push(board);
+			if(selected == "my") {
+				Trello.get("members/me/boards", {lists:"all"}, function(boards) {
+					deferred.resolve(boards);
 				});
-				$scope.loadLists();
-			});
-	
+				deferred.promise.then(function(boards) {
+					angular.forEach(boards,function(board,i) {
+						if(board.idOrganization == null) {
+							$scope.boards.push(board);
+						}
+					});
+					$scope.loadLists();
+				});
+			} else if (selected == "starred") {
+				Trello.get("members/me/boards", {filter:"starred",lists:"all"}, function(boards) {
+                                        deferred.resolve(boards);
+                                });
+                                deferred.promise.then(function(boards) {
+                                        angular.forEach(boards,function(board,i) {
+                                        	$scope.boards.push(board);
+                                        });
+                                        $scope.loadLists();
+                                });
+
+			} else {
+				Trello.get("organizations/"+$scope.selectedOrganisation.id+"/boards", {lists:"all"}, function(boards) {
+					deferred.resolve(boards);
+				});
+				deferred.promise.then(function(boards) {
+					$.each(boards, function(i, board) {
+						$scope.boards.push(board);
+					});
+					$scope.loadLists();
+				});
+			};
 		};
 
 		$scope.loadLists = function() {
