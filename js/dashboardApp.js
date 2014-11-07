@@ -1,5 +1,5 @@
 (function(){
-	var app = angular.module('dashboardApp', []);
+	var app = angular.module('dashboardApp', ['nvd3ChartDirectives']);
 	
 	app.controller('DashboardController', ['$scope', '$http', '$q', function($scope, $http, $q) {
 		$scope.authorised = false;
@@ -9,6 +9,17 @@
 
 		$scope.selectedOrganisation = null;
 		$scope.filter = 'open';
+
+		$scope.xFunction = function(){
+                	return function(d) {
+                    		return d.key;
+                	};
+            	}
+            	$scope.yFunction = function(){
+                	return function(d) {
+                    		return d.y;
+                	};
+            	}
 
 		$scope.init = function() {
 			$scope.authorise();
@@ -56,6 +67,7 @@
 
 		$scope.loadLists = function() {
 			$.each($scope.boards, function(i, board) {
+				board.chart = [];
 				$.each(board.lists, function(j, list) {
 					list.cards = [];
 					var deferred = $q.defer();
@@ -63,6 +75,7 @@
 						deferred.resolve(cards);
 					});
 					deferred.promise.then(function(cards) {
+						board.chart.push({key:list.name, y:cards.length});
 						list.cards = cards;
 					});
 				});
@@ -74,7 +87,6 @@
 		};
 
 		$scope.login = function() {
-			var deferred = $q.defer();
 			Trello.authorize({
 				type: "redirect"
 			});

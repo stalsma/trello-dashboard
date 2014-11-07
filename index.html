@@ -16,6 +16,12 @@
 		<!-- Angular JS -->
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.1/angular.min.js"></script>
 
+		<!-- d3, nvd3, angularjs-nvd3-directives -->
+		<script src="js/d3.min.js"></script>
+		<script src="js/nv.d3.min.js"></script>
+		<script src="js/angularjs-nvd3-directives.min.js"></script>
+		<link rel="stylesheet" href="css/nv.d3.css"/>
+
 		<!-- Trello Client -->
 		<script src="https://api.trello.com/1/client.js?key=d393ef8fea5f6d5d75562a9a5c25bb5e"></script>
 
@@ -92,11 +98,6 @@
 						<li>Select an Organisation to view</li>
 						<li>Choose whether to display Open, Closed, or All boards</li>
 						<li>Display each of the Lists in your Boards</li>
-					</ul>
-				</p>
-				<p>
-					Planned Features:
-					<ul>
 						<li>Display a count of cards per list</li>
 						<li>Provide a graphical representation of cards per list</li>
 					</ul>
@@ -115,7 +116,21 @@
 							</a>
 						</span>
 					</div>
-					<!--<div class="panel-body">Foo</div>-->
+					<div class="panel-body">
+						<nvd3-pie-chart
+							data="board.chart"
+							id="c-{{board.id}}"
+							objectequality="true"
+							showLabels="true"
+							x="xFunction()"
+							y="yFunction()"
+							donut="true"
+							donutRatio=".5"
+							donutLabelsOutside="true" width="500" height="500">
+							<svg style="width: 500px; height:500px;"></svg>
+						</nvd3-pie-chart>
+
+					</div>
 					<ul class="list-group">
 						<li class="list-group-item" ng-repeat="list in board.lists">
 							<span class="badge">{{list.cards.length}}</span>
