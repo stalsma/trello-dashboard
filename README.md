@@ -4,11 +4,9 @@ Welcome to the Trello Dashboard. This application will display a summary of your
 This version allows you to:
 
 * Login using your Trello account
-* Select an Organisation to view
+* Select from "My Boards" (default), "Starred Boards", or an Organisation to view
 * Choose whether to display Open, Closed, or All boards
 * Display each of the Lists in your Boards
-
-##Planned Features
 * Display a count of cards per list
 * Provide a graphical representation of cards per list
 
