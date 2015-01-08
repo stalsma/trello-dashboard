@@ -23,31 +23,14 @@
 		<script src="js/angularjs-nvd3-directives.min.js"></script>
 		<link rel="stylesheet" href="css/nv.d3.css"/>
 
+		<link rel="stylesheet" href="css/dashboard.css"/>
+
 		<!-- Trello Client -->
 		<script src="https://api.trello.com/1/client.js?key=d393ef8fea5f6d5d75562a9a5c25bb5e"></script>
 
 		<!-- Dashboard Controller -->
 		<script src="js/trelloLibrary.js"></script>
 		<script src="js/dashboardApp.js"></script>
-
-		<style>
-			// http://www.bootply.com/123350
-			*, *:before, *:after {box-sizing:  border-box !important;}
-
-			.row {
-				 -moz-column-width: 25em;
-				 -webkit-column-width: 25em;
-				 -moz-column-gap: .5em;
-				 -webkit-column-gap: .5em;
-			}
-
-			.panel-masonry {
-				 display: inline-block;
-				 margin:  .5em;
-				 padding:  0;
-				 width:98%;
-			}
-		</style>
 	</head>
 	<body ng-controller="DashboardController">
 		<nav class="navbar navbar-default" role="navigation">
@@ -148,5 +131,14 @@
 				</div>
 			</div>
 		</div>
+
+		<footer class="footer">
+			<div class="container">
+				<p class="text-muted">
+					Developed &amp; Maintained by <a href="https://johnvoysey.wordpress.com" target="_blank">John Voysey</a>.
+					Hosted on <a href="https://github.com" target="_blank">GitHub Pages</a>.
+				</p>
+			</div>
+		</footer>
 	</body>
 </html>
