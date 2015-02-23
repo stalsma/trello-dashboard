@@ -1,4 +1,4 @@
-n<!DOCTYPE html>
+<!DOCTYPE html>
 <html ng-app="dashboardApp">
 	<head>
 		<title>Trello Dashboard</title>
@@ -71,6 +71,14 @@ n<!DOCTYPE html>
 					<p ng-show="authorised == true" class="navbar-text navbar-right">
 						{{user[0].fullName}} <img style="width: 22px; height: 22px;" ng-src="https://trello-avatars.s3.amazonaws.com/{{user[0].avatarHash}}/30.png"/>
 					</p>
+					<form class="navbar-form navbar-right">
+						<div class="input-group">
+							<span class="input-group-addon">
+								<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+							</span>
+							<input type="text" class="form-control" placeholder="Search" ng-model="search">
+						</div>
+					</form>
 				</div>
 			</div>
 		</nav>
@@ -98,7 +106,7 @@ n<!DOCTYPE html>
 		</div>
 		<div class="container">
 			<div class="row">
-				<div class="panel panel-masonry" ng-repeat="board in boards" ng-class="board.closed ? 'panel-danger' : 'panel-primary'" ng-show="filter == 'all' || (!board.closed && filter == 'open') || (board.closed && filter == 'closed')">
+				<div class="panel panel-masonry" ng-repeat="board in boards" ng-class="board.closed ? 'panel-danger' : 'panel-primary'" ng-show="(filter == 'all' || (!board.closed && filter == 'open') || (board.closed && filter == 'closed')) && (search == null || board.name.toUpperCase().indexOf(search.toUpperCase()) > -1)">
 					<div class="panel-heading">
 						<strong>{{board.name}}</strong>
 						<span class="pull-right">

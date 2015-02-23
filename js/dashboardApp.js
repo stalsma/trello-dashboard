@@ -23,6 +23,8 @@
 		$scope.selectedOrganisation = null;
 		$scope.filter = 'open';
 
+		$scope.search = null;
+
 		$scope.xFunction = function(){
     	return function(d) {
     		return d.key;
