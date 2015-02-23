@@ -68,7 +68,7 @@
 
         // Get boards for the selected organisation
         if(organisationId == "my") {
-          Trello.get("members/me/boards", {lists:"all"}, function(boards) {
+          Trello.get("members/me/boards", {lists:"open"}, function(boards) {
             deferred.resolve(boards);
           });
           deferred.promise.then(function(boards) {
@@ -79,7 +79,7 @@
             });
           });
         } else if (organisationId == "starred") {
-          Trello.get("members/me/boards", {filter:"starred",lists:"all"}, function(boards) {
+          Trello.get("members/me/boards", {filter:"starred",lists:"open"}, function(boards) {
             deferred.resolve(boards);
           });
           deferred.promise.then(function(boards) {
@@ -88,7 +88,7 @@
             });
           });
         } else {
-          Trello.get("organizations/"+organisationId+"/boards", {lists:"all"}, function(boards) {
+          Trello.get("organizations/"+organisationId+"/boards", {lists:"open"}, function(boards) {
             deferred.resolve(boards);
           });
           deferred.promise.then(function(boards) {
