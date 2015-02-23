@@ -1,5 +1,5 @@
 	// Dashboard
-	var app = angular.module('dashboardApp', ['nvd3ChartDirectives', 'ngRoute', 'trelloLibrary']);
+	var app = angular.module('dashboardApp', ['nvd3ChartDirectives', 'ngRoute', 'trelloLibrary', 'ngAnimate']);
 
 	app.config(
 		function ($routeProvider){
