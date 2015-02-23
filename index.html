@@ -106,7 +106,7 @@
 		</div>
 		<div class="container">
 			<div class="row">
-				<div class="panel panel-masonry" ng-repeat="board in boards" ng-class="board.closed ? 'panel-danger' : 'panel-primary'" ng-show="(filter == 'all' || (!board.closed && filter == 'open') || (board.closed && filter == 'closed')) && (search == null || board.name.toUpperCase().indexOf(search.toUpperCase()) > -1)">
+				<div class="panel panel-masonry" ng-repeat="board in boards" ng-class="board.closed ? 'panel-danger' : 'panel-primary'" ng-show="pendingRequests == 0 && (filter == 'all' || (!board.closed && filter == 'open') || (board.closed && filter == 'closed')) && (search == null || board.name.toUpperCase().indexOf(search.toUpperCase()) > -1)">
 					<div class="panel-heading">
 						<strong>{{board.name}}</strong>
 						<span class="pull-right">
@@ -136,6 +136,17 @@
 							{{list.name}}
 						</li>
 					</ul>
+				</div>
+			</div>
+			<div class="col-sm-6 col-sm-offset-3">
+				<div class="panel panel-default" ng-show="pendingRequests > 0">
+					<div class="panel-heading"><strong>Loading...</strong></div>
+					<div class="panel-body">
+						Please wait...
+						<div class="progress progress-striped active">
+							<div class="progress-bar progress-bar-info" style="width: 100%"></div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

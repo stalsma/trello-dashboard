@@ -13,7 +13,7 @@
 		}
 	);
 
-	app.controller('DashboardController', ['$scope', '$http', '$q', '$route', '$routeParams', '$location', 'trelloService', function($scope, $http, $q, $route, $routeParams, $location, trelloService) {
+	app.controller('DashboardController', ['$scope', '$rootScope', '$http', '$q', '$route', '$routeParams', '$location', 'trelloService', function($scope, $rootScope, $http, $q, $route, $routeParams, $location, trelloService) {
 		$scope.authorised = false;
 
 		$scope.user = null;
@@ -24,6 +24,8 @@
 		$scope.filter = 'open';
 
 		$scope.search = null;
+
+		$rootScope.pendingRequests = 0;
 
 		$scope.xFunction = function(){
     	return function(d) {

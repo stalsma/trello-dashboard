@@ -18,9 +18,10 @@
       //
       authorise: function() {
         var deferred = $q.defer();
+        $rootScope.pendingRequests++;
         Trello.authorize({
           interactive: false,
-          success: deferred.resolve()
+          success: function() { deferred.resolve(); $rootScope.pendingRequests--; }
         });
         return deferred.promise;
       },
@@ -29,10 +30,13 @@
         var deferred = $q.defer();
         var user     = [];
 
+        $rootScope.pendingRequests++;
+
         Trello.get("members/me", {fields: "username,fullName,avatarHash,url"}, function(me){
           deferred.resolve(me);
         });
         deferred.promise.then(function(me){
+          $rootScope.pendingRequests--;
           user.push(me);
         });
         return user;
@@ -42,6 +46,8 @@
       getOrganisations: function() {
         var deferred = $q.defer();
         var organisations = [];
+
+        $rootScope.pendingRequests++;
 
         // Add a 'dummy' organisation for "My Boards"
         organisations.push({id:"my",name:"My Boards",displayName:"My Boards",url:"",closed:false});
@@ -54,6 +60,7 @@
           deferred.resolve(organisations);
         });
         deferred.promise.then(function(value) {
+          $rootScope.pendingRequests--;
           $.each(value, function(i, organisation) {
             organisations.push(organisation);
           });
@@ -66,12 +73,15 @@
         var organisationBoards   = [];
         var deferred = $q.defer();
 
+        $rootScope.pendingRequests++;
+
         // Get boards for the selected organisation
         if(organisationId == "my") {
           Trello.get("members/me/boards", {lists:"open"}, function(boards) {
             deferred.resolve(boards);
           });
           deferred.promise.then(function(boards) {
+            $rootScope.pendingRequests--;
             angular.forEach(boards,function(board,i) {
               if(board.idOrganization == null) {
                 organisationBoards.push(functions.getListCards(board));
@@ -83,6 +93,7 @@
             deferred.resolve(boards);
           });
           deferred.promise.then(function(boards) {
+            $rootScope.pendingRequests--;
             angular.forEach(boards,function(board,i) {
               organisationBoards.push(functions.getListCards(board));
             });
@@ -92,6 +103,7 @@
             deferred.resolve(boards);
           });
           deferred.promise.then(function(boards) {
+            $rootScope.pendingRequests--;
             $.each(boards, function(i, board) {
               organisationBoards.push(functions.getListCards(board));
             });
@@ -106,10 +118,14 @@
         angular.forEach(board.lists, function(list, j) {
           list.cards = [];
           var deferred = $q.defer();
+
+          $rootScope.pendingRequests++;
+
           Trello.get("lists/" + list.id + "/cards", {}, function(cards) {
             deferred.resolve(cards);
           });
           deferred.promise.then(function(cards) {
+            $rootScope.pendingRequests--;
             board.chart.push({key:list.name, y:cards.length});
             list.cards = cards;
           });
