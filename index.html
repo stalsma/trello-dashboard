@@ -74,7 +74,7 @@
 					<p ng-show="authorised == true" class="navbar-text navbar-right">
 						{{user[0].fullName}} <img style="width: 22px; height: 22px;" ng-src="https://trello-avatars.s3.amazonaws.com/{{user[0].avatarHash}}/30.png"/>
 					</p>
-					<form class="navbar-form navbar-right">
+					<form class="navbar-form navbar-right" ng-show="selectedOrganisation != null">
 						<div class="input-group">
 							<span class="input-group-addon">
 								<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
@@ -142,7 +142,7 @@
 				</div>
 			</div>
 			<div class="col-sm-6 col-sm-offset-3">
-				<div class="panel panel-default" ng-show="pendingRequests > 0">
+				<div class="panel panel-default" ng-show="authorised == true && pendingRequests > 0">
 					<div class="panel-heading"><strong>Loading...</strong></div>
 					<div class="panel-body">
 						Please wait...
