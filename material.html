@@ -1,0 +1,132 @@
+<html lang="en" ng-app="dashboardApp">
+
+  <head>
+    <title>Trello Dashboard</title>
+    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+
+    <!-- Angular Material Dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.4/hammer.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.6/angular.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.6/angular-animate.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.6/angular-aria.min.js"></script>
+
+    <!-- Angular Material Javascript now available via Google CDN; version 0.7 used here -->
+    <script src="//ajax.googleapis.com/ajax/libs/angular_material/0.7.1/angular-material.min.js"></script>
+
+    <!-- Angular JS Routing -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.6/angular-route.js"></script>
+
+    <!-- d3, nvd3, angularjs-nvd3-directives -->
+    <script src="js/d3.min.js"></script>
+    <script src="js/nv.d3.min.js"></script>
+    <script src="js/angularjs-nvd3-directives.min.js"></script>
+    <link rel="stylesheet" href="css/nv.d3.css"/>
+
+    <link rel="stylesheet" href="css/dashboard.css"/>
+
+    <!-- Trello Client -->
+    <script src="https://api.trello.com/1/client.js?key=d393ef8fea5f6d5d75562a9a5c25bb5e"></script>
+
+    <!-- Dashboard Controller -->
+    <script src="js/trelloLibrary.js"></script>
+    <script src="js/materialDashboardApp.js"></script>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-58390114-1', 'auto');
+      ga('send', 'pageview');
+    </script>
+
+    <!-- Angulars Material CSS now available via Google CDN; version 0.7 used here -->
+    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/angular_material/0.7.1/angular-material.min.css">
+    <link rel="stylesheet" href="css/material.css"/>
+  </head>
+
+  <body layout="column" ng-controller="DashboardController">
+
+    <!-- Top toolbar -->
+    <md-toolbar layout="row">
+      <button ng-click="toggleSidenav('left')" class="menuBtn">
+        <span class="visuallyhidden">Menu</span>
+      </button>
+      <h1>Material Trello Dashboard</h1>
+    </md-toolbar>
+
+    <div layout="row" layout-wrap>
+      <div flex-sm="100" flex-gt-sm="50" flex-gt-md="33" ng-repeat="board in boards" ng-show="filter == 'all' || (!board.closed && filter == 'open') || (board.closed && filter == 'closed')">
+        <md-content class="md-padding">
+          <md-card>
+            <md-toolbar ng-class="board.closed ? 'md-warn' : 'md-accent'">
+              <h3>{{board.name}}</h3>
+            </md-toolbar>
+            <md-card-content>
+              <nvd3-pie-chart
+                data="board.chart"
+                id="c-{{board.id}}"
+                objectequality="true"
+                showLabels="true"
+                x="xFunction()"
+                y="yFunction()"
+                donut="true"
+                donutRatio=".5"
+                donutLabelsOutside="true" width="500" height="500">
+                <svg></svg>
+              </nvd3-pie-chart>
+              <md-list>
+                <md-item ng-repeat="list in board.lists">
+                  <md-item-content>
+                    <p>{{list.cards.length}} {{list.name}}</p>
+                  </md-item-content>
+                  <md-divider ng-if="!$last"></md-divider>
+                </md-item>
+              </md-list>
+            </md-card-content>
+          </md-card>
+        </md-content>
+      </div>
+    </div>
+
+    <!-- Testing -->
+    <!-- Material 0.8.0+ required
+    <md-grid-list
+        md-cols="3"
+        >
+      <md-grid-tile
+          ng-repeat="board in boards"
+          ng-show="filter == 'all' || (!board.closed && filter == 'open') || (board.closed && filter == 'closed')"
+          md-rowspan="1" md-colspan="1">
+          <md-grid-tile-header>
+            <h3>{{board.name}}</h3>
+          </md-grid-tile-header>
+          <md-grid-tile-footer>
+            foo
+          </md-grid-tile-footer>
+      </md-grid-tile>
+    </md-grid-list>
+  -->
+
+    <!-- Left Sidenav -->
+    <div class="mtd-sidenav" layout="row" flex>
+      <md-sidenav layout="column" class="md-sidenav-left md-whiteframe-z2" md-component-id="left">
+        <md-toolbar class="md-accent">
+          <h1>Choose an Organisation</h1>
+        </md-toolbar>
+
+        <!-- List of Organisations to choose from -->
+        <md-content class="md-padding">
+          <section layout="column">
+            <span ng-repeat="item in organisations">
+              <md-button class="md-primary" ng-href="#/{{item.id}}/open" ng-click="toggleSidenav('left')">{{item.displayName}}</md-button>
+              <md-divider ng-if="!$last"></md-divider>
+            </span>
+          </section>
+        </md-content>
+      </md-sidenav>
+    </div>
+  </body>
+</html>
